@@ -9,7 +9,7 @@ disp ('分析各个单词的模板信息...');
 for i = (1:theN)
     for j = (1:theM)
         [y, fs] = readwav (char (theWords (i)), int2str (j));
-        [startp, endp] = vad (y, fs);
+        [startp, endp] = vad (y);
         subplot(3,1,3);
         plot(y);
         axis([1,length(y),min(y),max(y)]);
