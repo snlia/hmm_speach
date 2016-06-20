@@ -5,5 +5,5 @@ function x = enframe (y, win)
 
 len = length (y);
 for i = (1 : len)
-    x(i) = y(i) * win(i)
+    x(i) = y(i) * win(i);
 end

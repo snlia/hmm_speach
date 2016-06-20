@@ -12,5 +12,6 @@ filename = strcat (filename, '.wav');
 disp (strcat ('loading file ', filename));
 
 [y, fs] = audioread (filename);
+y=y.';
 
 disp (strcat (strcat ('file ', filename), 'has been loaded'));

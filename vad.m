@@ -9,9 +9,10 @@ y = y / max(abs(y));
 
 %设定参数
 
-framelen = fs * 0.01; % 10ms
+framelen = fs * 0.02; % 20ms
 frameinc = framelen * 0.5; % 桢长一半
-theEsp = 0.05; %设定零点偏差
+theEsp = 0;%min (max (y(1:framelen * 2)) - min (y(1:framelen * 2)), max (y(length (y) - framelen * 2:length (y))) - min (y(length (y) - framelen * 2:length (y))));
+disp (theEsp);
 
 %幅度归一化到[-1,1]
 
@@ -32,17 +33,22 @@ sm = sum (abs (theTmp), 2);
 %设定幅度上下门限,theMh, theMl, 之间判断为浊音段。
 
 theMh = max (sm) / 4;
-theMl = max (sm) / 8;
+theMl = max (sm) / 16;
 
 %设定过零率门限theZ0
 
-theZ0 = max (szcr) / 8;
+theZ0 = max (szcr) / 16;
+disp (max  (szcr));
 
 %设定一些变量
 
 theLen = length (szcr); %分出多少帧
 
 %第一步，通过theMh判断浊音段
+
+figure, subplot(3,1,1);
+plot (sm);
+axis([1,length(sm),min(sm),max(sm)]);
 
 for startp = (1:theLen)
     if (sm(startp) >= theMh) 
@@ -55,6 +61,9 @@ for endp = (theLen:-1:1)
         break;
     end;
 end;
+
+line([startp ,startp],[min(sm),theMh],'color','green');
+line([endp ,endp],[min(sm),theMh],'color','green');
 
 %第二步，通过theMl向两边拓宽浊音段
 
@@ -70,19 +79,30 @@ for endp = (endp:theLen)
     end;
 end;
 
+line([startp ,startp],[min(sm),theMl],'color','red');
+line([endp ,endp],[min(sm),theMl],'color','red');
+
 %第三步，通过短时过零率判断前后轻音段
 
-for startp = (startp:-1:max(startp - 5,1))
+subplot(3,1,2);
+plot (szcr);
+axis([1,length(szcr),min(szcr),max(szcr)]);
+
+for startp = (startp:-1:1)
+    disp (szcr(startp));
     if (szcr(startp) <= theZ0)
         break;
     end;
 end;
 
-for endp = (endp:min(end + 5,theLen))
+for endp = (endp:theLen)
     if (szcr(endp) <= theZ0)
         break;
     end;
 end;
 
-startp = framelen + (frameinc - 1) * startp;
-endp = framelen + (frameinc - 1) * endp;
+line([startp ,startp],[min(szcr),theZ0],'color','red');
+line([endp,endp],[min(szcr),theZ0],'color','red');
+
+startp = (frameinc - 1) * startp;
+endp = (frameinc - 1) * endp;
