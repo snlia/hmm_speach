@@ -23,7 +23,7 @@ y = y / max_y;
 theTmp = enframe_muti (y(1:end - 1), ones (1, framelen), framelen, frameinc);
 theTmpp = enframe_muti (y(2:end), ones (1, framelen), framelen, frameinc);
 theTmppp = abs (theTmp - theTmpp);
-theEsp = min (max (theTmppp(1)), max (theTmppp(length(theTmppp))));
+theEsp = max (max (theTmppp(1)), max (theTmppp(length(theTmppp))));
 szcr = sum ((theTmp.*theTmpp < 0) .* (abs (theTmp - theTmpp) > theEsp), 2); %过零且两点值相差大于theEsp
 
 %计算短时幅度 sm(short-term magnitude)
@@ -37,7 +37,7 @@ theMl = max (sm) / 16;
 
 %设定过零率门限theZ0
 
-theZ0 = max (szcr)*0.09;
+theZ0 = max (szcr)*0.08;
 disp (max  (szcr));
 
 %设定一些变量
@@ -62,7 +62,7 @@ for endp = (theLen:-1:1)
     end;
 end;
 
-line([startp ,startp],[min(sm),theMh],'color','green');
+line([startp,startp],[min(sm),theMh],'color','green');
 line([endp ,endp],[min(sm),theMh],'color','green');
 
 %第二步，通过theMl向两边拓宽浊音段

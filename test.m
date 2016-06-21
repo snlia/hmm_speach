@@ -13,7 +13,6 @@ for i = (1:theN)
         [startp, endp] = vad (y,fs);
         sound (y(startp:endp));
         subplot(4,1,3);
-        y=y(endp:length(y));
         plot(y);
         axis([1,length(y),min(y),max(y)]);
         line([startp ,startp],[min(y),max(y)],'color','red');
