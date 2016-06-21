@@ -11,8 +11,6 @@ y = y / max(abs(y));
 
 framelen = fs * 0.02; % 20ms
 frameinc = framelen * 0.5; % 桢长一半
-theEsp = 0;%min (max (y(1:framelen * 2)) - min (y(1:framelen * 2)), max (y(length (y) - framelen * 2:length (y))) - min (y(length (y) - framelen * 2:length (y))));
-disp (theEsp);
 
 %幅度归一化到[-1,1]
 
@@ -24,11 +22,13 @@ y = y / max_y;
 
 theTmp = enframe_muti (y(1:end - 1), ones (1, framelen), framelen, frameinc);
 theTmpp = enframe_muti (y(2:end), ones (1, framelen), framelen, frameinc);
+theTmppp = abs (theTmp - theTmpp);
+theEsp = min (max (theTmppp(1)), max (theTmppp(length(theTmppp))));
 szcr = sum ((theTmp.*theTmpp < 0) .* (abs (theTmp - theTmpp) > theEsp), 2); %过零且两点值相差大于theEsp
 
 %计算短时幅度 sm(short-term magnitude)
 
-sm = sum (abs (theTmp), 2);
+sm = sum (abs (theTmp.*theTmp), 2);
 
 %设定幅度上下门限,theMh, theMl, 之间判断为浊音段。
 
@@ -37,7 +37,7 @@ theMl = max (sm) / 16;
 
 %设定过零率门限theZ0
 
-theZ0 = max (szcr) / 16;
+theZ0 = max (szcr)*0.09;
 disp (max  (szcr));
 
 %设定一些变量
@@ -46,7 +46,7 @@ theLen = length (szcr); %分出多少帧
 
 %第一步，通过theMh判断浊音段
 
-figure, subplot(3,1,1);
+figure, subplot(4,1,1);
 plot (sm);
 axis([1,length(sm),min(sm),max(sm)]);
 
@@ -84,12 +84,11 @@ line([endp ,endp],[min(sm),theMl],'color','red');
 
 %第三步，通过短时过零率判断前后轻音段
 
-subplot(3,1,2);
+subplot(4,1,2);
 plot (szcr);
 axis([1,length(szcr),min(szcr),max(szcr)]);
 
 for startp = (startp:-1:1)
-    disp (szcr(startp));
     if (szcr(startp) <= theZ0)
         break;
     end;
@@ -101,8 +100,8 @@ for endp = (endp:theLen)
     end;
 end;
 
-line([startp ,startp],[min(szcr),theZ0],'color','red');
-line([endp,endp],[min(szcr),theZ0],'color','red');
+line([startp ,startp],[min(szcr),max(szcr)],'color','red');
+line([endp,endp],[min(szcr),max(szcr)],'color','red');
 
 startp = (frameinc - 1) * startp;
 endp = (frameinc - 1) * endp;
