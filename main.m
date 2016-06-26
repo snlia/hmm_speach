@@ -10,6 +10,7 @@ for i = 1 : N
     for j = 1 : M
         [y, fs] = readwav (char (theWords (i)), int2str (j));
         [startp, endp] = vad (y, fs);
-        k = y (startp : endp);
+        y = y (startp : endp);
+        mfcc (y, fs);
     end
 end

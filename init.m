@@ -11,5 +11,5 @@ theM = 1;
 
 global theWords; %单词集
 theWords = cell (1,theN); 
-theWords = {'识别'};
+theWords = {'Start'};
 

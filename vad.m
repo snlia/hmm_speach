@@ -1,4 +1,4 @@
-%起/终点判断函数
+%vad (Voice Activity Detection) 起/终点判断函数
 %输入一个时域采样信息y与采样频率fs，返回发音部分的起点与终点。
 function [startp, endp] = vad (y, fs)
 
@@ -9,8 +9,8 @@ y = y / max(abs(y));
 
 %设定参数
 
-framelen = fs * 0.02; % 20ms
-frameinc = framelen * 0.5; % 桢长一半
+framelen = fs * 0.02; % 桢长，20ms
+frameinc = framelen * 0.5; % 桢移，桢长一半
 
 %幅度归一化到[-1,1]
 
@@ -24,7 +24,7 @@ theTmp = enframe_muti (y(1:end - 1), ones (1, framelen), framelen, frameinc);
 theTmpp = enframe_muti (y(2:end), ones (1, framelen), framelen, frameinc);
 theTmppp = abs (theTmp - theTmpp);
 theEsp = max (max (theTmppp(1)), max (theTmppp(length(theTmppp))));
-szcr = sum ((theTmp.*theTmpp < 0) .* (abs (theTmp - theTmpp) > theEsp), 2); %过零且两点值相差大于theEsp
+szcr = sum ((theTmp.*theTmpp < 0) .* (theTmppp > theEsp), 2); %过零且两点值相差大于theEsp
 
 %计算短时幅度 sm(short-term magnitude)
 
@@ -38,7 +38,6 @@ theMl = max (sm) / 16;
 %设定过零率门限theZ0
 
 theZ0 = max (szcr)*0.08;
-disp (max  (szcr));
 
 %设定一些变量
 

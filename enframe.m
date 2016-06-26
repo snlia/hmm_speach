@@ -1,4 +1,4 @@
-%加窗函数
+%enframe 加窗函数
 %enframe输入一个原始数据y，窗口函数，返回加窗后的数据x。
 
 function x = enframe (y, win)

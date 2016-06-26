@@ -11,13 +11,8 @@ for i = (1:theN)
     for j = (NowM:NowM)
         [y, fs] = readwav (char (theWords (i)), int2str (j));
         [startp, endp] = vad (y,fs);
-        sound (y(startp:endp));
-        subplot(4,1,3);
-        plot(y);
-        axis([1,length(y),min(y),max(y)]);
-        line([startp ,startp],[min(y),max(y)],'color','red');
-        line([endp ,endp],[min(y),max(y)],'color','red');
-        disp('显示端点……');
+        y = y (startp : endp);
+        res = mfcc (y, fs);
         break;
     end;
 end;

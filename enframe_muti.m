@@ -1,4 +1,4 @@
-%加窗函数
+%enframe_muti 加窗函数
 %enframe_muti 提供桢长framelen以及桢移frameinc，返回一组加窗后的数据x
 
 function x = enframe_muti (y, win, framelen, frameinc)
