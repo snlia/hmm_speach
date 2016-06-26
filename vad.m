@@ -1,6 +1,6 @@
 %vad (Voice Activity Detection) 起/终点判断函数
-%输入一个时域采样信息y与采样频率fs，返回发音部分的起点与终点。
-function [startp, endp] = vad (y, fs)
+%输入一个时域采样信息y与采样频率fs，返回发音部分的起点startp与终点endp，以及这个语音的权重。
+function [startp, endp, value] = vad (y, fs)
 
 %将数值映射到[-1, 1], 方便参数设定
 
@@ -23,7 +23,7 @@ y = y / max_y;
 theTmp = enframe_muti (y(1:end - 1), ones (1, framelen), framelen, frameinc);
 theTmpp = enframe_muti (y(2:end), ones (1, framelen), framelen, frameinc);
 theTmppp = abs (theTmp - theTmpp);
-theEsp = max (max (theTmppp(1)), max (theTmppp(length(theTmppp))));
+theEsp = max (max (theTmppp(1)), max (theTmppp(length(theTmppp)))) * 1.2;
 szcr = sum ((theTmp.*theTmpp < 0) .* (theTmppp > theEsp), 2); %过零且两点值相差大于theEsp
 
 %计算短时幅度 sm(short-term magnitude)
@@ -37,7 +37,7 @@ theMl = max (sm) / 16;
 
 %设定过零率门限theZ0
 
-theZ0 = max (szcr)*0.08;
+theZ0 = max (szcr)*0.074;
 
 %设定一些变量
 
@@ -45,9 +45,9 @@ theLen = length (szcr); %分出多少帧
 
 %第一步，通过theMh判断浊音段
 
-figure, subplot(4,1,1);
-plot (sm);
-axis([1,length(sm),min(sm),max(sm)]);
+%figure, subplot(4,1,1);
+%plot (sm);
+%axis([1,length(sm),min(sm),max(sm)]);
 
 for startp = (1:theLen)
     if (sm(startp) >= theMh) 
@@ -61,8 +61,8 @@ for endp = (theLen:-1:1)
     end;
 end;
 
-line([startp,startp],[min(sm),theMh],'color','green');
-line([endp ,endp],[min(sm),theMh],'color','green');
+%line([startp,startp],[min(sm),theMh],'color','green');
+%line([endp ,endp],[min(sm),theMh],'color','green');
 
 %第二步，通过theMl向两边拓宽浊音段
 
@@ -78,14 +78,14 @@ for endp = (endp:theLen)
     end;
 end;
 
-line([startp ,startp],[min(sm),theMl],'color','red');
-line([endp ,endp],[min(sm),theMl],'color','red');
+%line([startp ,startp],[min(sm),theMl],'color','red');
+%line([endp ,endp],[min(sm),theMl],'color','red');
 
 %第三步，通过短时过零率判断前后轻音段
 
-subplot(4,1,2);
-plot (szcr);
-axis([1,length(szcr),min(szcr),max(szcr)]);
+%subplot(4,1,2);
+%plot (szcr);
+%axis([1,length(szcr),min(szcr),max(szcr)]);
 
 for startp = (startp:-1:1)
     if (szcr(startp) <= theZ0)
@@ -99,8 +99,9 @@ for endp = (endp:theLen)
     end;
 end;
 
-line([startp ,startp],[min(szcr),max(szcr)],'color','red');
-line([endp,endp],[min(szcr),max(szcr)],'color','red');
+%line([startp ,startp],[min(szcr),max(szcr)],'color','red');
+%line([endp,endp],[min(szcr),max(szcr)],'color','red');
 
 startp = (frameinc - 1) * startp;
 endp = (frameinc - 1) * endp;
+value = 1;

@@ -4,12 +4,18 @@ function [ignore] = init
 
 ignore = [];
 
-global theN; % 单词数量
-theN = 1; 
-global theM; % 采样数
-theM = 1; 
+global theNs; % 学号数量
+theNs = 1; 
+global theWs; %单词数量
+theWs = 1;
+global theMs; % 采样数
+theMs = 20; 
 
 global theWords; %单词集
-theWords = cell (1,theN); 
+theWords = cell (1,theWs); 
 theWords = {'Start'};
+
+global theNames; %学号集
+theNames = cell (1,theNs); 
+theNames = {'14307130244'};
 

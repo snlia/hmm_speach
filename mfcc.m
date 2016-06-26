@@ -4,7 +4,6 @@
 function res = mfcc (y, fs)
 
 %设定mfcc相关系数
-
 Ms = 16; %mel滤波器组数
 frameLen = fs * 0.02; %桢长，20ms
 frameInc = frameLen * 0.5; % 桢移，桢长一半
@@ -15,6 +14,7 @@ frameInc = frameLen * 0.5; % 桢移，桢长一半
 %加窗并分桢
 yy = enframe_muti (y, Hamming (frameLen), frameLen, frameInc);
 
+%mfcc计算
 for i = (1:size (yy, 1))
     nowy = yy (i, : );
     Nowy = fft (nowy); %傅里叶变换得到频域特征
