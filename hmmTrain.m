@@ -1,6 +1,6 @@
 %hmm(hidden Markov model)
 %用隐马尔科夫模型训练样本集, 输入样本集，输出马尔科夫模型
-%其中，A为转移矩阵,B为观测状态的高斯模型，pi为初始向量
+%其中，A为转移矩阵,B为观测到状态的概率分布，即高斯模型，pi为初始向量
 function [hmm] = hmmTrain (idex, samples, fs)
 
 N = length (samples);
@@ -22,4 +22,7 @@ global theStates; %每个单词的状态数
 S = theStates (idex); %对应的马尔科夫模型状态数量
 
 hmm = initHmm (data, S);
+
+%开始训练样本
+for i = (1 : 100)
 

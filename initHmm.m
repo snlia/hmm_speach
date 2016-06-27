@@ -1,8 +1,10 @@
 %根据数据生成初始的hmm矩阵
 %初始转移矩阵为呈指数梯度下降矩阵，初始状态全为1
-%将样本截成长度相同的段构建状态的高斯模型
-%其中，A为转移矩阵,B为观测状态的高斯模型，pi为初始向量
+%将样本截成长度相同的段构建状态的混合高斯模型
+%其中，A为转移矩阵,B为观测到状态的概率分布，即高斯模型，pi为初始向量
 function [hmm] = initHmm (data, S)
+
+hmm.N = S;
 
 %构建初始状态向量
 hmm.pi = zeros (1, S);
@@ -24,6 +26,8 @@ for i = (1 : S)
     hmm.A(i, :) = hmm.A(i, :) / sum (hmm.A(i, :));
 end
 
+%B为对角阵
+
 %构建初始gmm
 
 N = size (data, 1);
@@ -40,6 +44,6 @@ for i = (1 : S)
             allsample = [allsample; sample (stp : edp, :)];
         end
     end
-    hmm.B (i) = mkgmm (allsample, 3); %进行高斯模型计算
+    hmm.B (i) = mkGmm (allsample, 3); %进行高斯模型计算，设定每个高斯模型由3组高斯函数混合
 end
 
