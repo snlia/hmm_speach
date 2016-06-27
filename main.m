@@ -17,14 +17,14 @@ for k = 1 : theWs
             [y, fs] = readwav (char (theNames (i)), char (theWords (k)), int2str (j));
             [startp, endp] = vad (y,fs);
             sound (y (startp : endp));
-            pause ;
+            %pause ;
             tot = tot + 1;
-            samples(tot + 1, :) = y;
+            samples (tot).x = y;
         end
     end
     disp (strcat ( strcat ( strcat (strcat ('单词' ,theWords (k)), '样本提取完成，共采样'), int2str (tot)), '组'));
     disp ('开始训练...');
-    [hmm] = hmmTrain (samples, fs);
+    [hmm] = hmmTrain (k, samples, fs);
     disp ('训练完成...储存模板...')
 end
 

@@ -19,3 +19,5 @@ global theNames; %学号集
 theNames = cell (1,theNs); 
 theNames = {'14307130244'};
 
+global theStates; %每个单词的状态数
+theStates = [5];
