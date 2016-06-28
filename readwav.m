@@ -2,9 +2,7 @@
 %读入word和id，返回对应模板wav的读取信息，其中y为时域信息，fs为采样频率
 function [y, fs] = readwav (name, word, id)
 
-filename = strcat ('/home/snlia/work/speech/myspeech/data/', word);
-filename = strcat (filename, '/');
-filename = strcat (filename, name);
+filename = strcat ('/home/snlia/work/speech/myspeech/data/', name);
 filename = strcat (filename, '_');
 filename = strcat (filename, word);
 filename = strcat (filename, '_');

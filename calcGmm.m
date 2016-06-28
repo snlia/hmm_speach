@@ -6,5 +6,3 @@ for i = (1:gmm.K)
     p = p + gmm.w(i) * pdf (x, gmm.mu (i, :), gmm.sigma (i, :));
 end
 
-p = log (p);
-

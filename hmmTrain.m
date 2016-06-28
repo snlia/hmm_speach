@@ -28,13 +28,14 @@ hmm = initHmm (data, S);
 %开始训练样本
 lastp = realmin;
 esp = 0.000005;
-for i = (1 : 100)
+for i = (1 : 20)
     hmm = BaumWelch (hmm, data);
+    dispHmm (hmm);
     nowp = 0;
     for j = (1 : N)
         nowp = nowp + data(j).val * viterbi (hmm, data (j).x);
     end
-    if (log (nowp) - log (lastp) < esp) 
+    if (((nowp - lastp) / nowp) < esp) 
         break;
     end
     lastp = nowp;

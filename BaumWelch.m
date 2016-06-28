@@ -32,11 +32,13 @@ hmm.A  = zeros (N, N);
 for i = (1 : N)
     for j = (1 : N)
         for k = (1 : T)
-            hmm.A (i, j) = hmm.A (i, j) + sum (gamma (k).x (:, i, j)) * data (k).val; 
+            tmp1 = gamma (k).x (:, i, j);
+            tmp2 = gamma (k).x (:, i, :);
+            hmm.A (i, j) = hmm.A (i, j) + sum (tmp1(:)) / sum (tmp2(:)) * data (k).val; 
         end
     end
 end
-hmm.A (i, j) = hmm.A (i, j) / allValue;
+hmm.A = hmm.A / allValue;
 
 %更新混合高斯模型
 

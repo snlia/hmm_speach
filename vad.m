@@ -9,7 +9,7 @@ y = y / max(abs(y));
 
 %设定参数
 
-framelen = fs * 0.02; % 桢长，20ms
+framelen = 256;%fs * 0.02; % 桢长，20ms
 frameinc = framelen * 0.5; % 桢移，桢长一半
 
 %幅度归一化到[-1,1]
