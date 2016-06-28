@@ -1,16 +1,16 @@
-% --- Executes on button press in pushbutton_Recording.
-function pushbutton_Recording_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_Recording (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+% 运行平台：Mac OSX，MATLAB R2014b
+% 录音录2秒钟
+function [] = record ()
+    Time = 2;
 
-ChannelNo = 1;
-Fs = 16000;
-TimePeriod = 2;
+    FS = 8000;
+    nBits = 16;
+    recObj = audiorecorder(FS, nBits, 1);
+    disp('Start speaking.')
+    recordblocking(recObj, Time);
+    disp('End of Recording.');
 
-handles.DataRecord = wavrecord(TimePeriod * Fs, Fs, ChannelNo);
+    myRecording = getaudiodata(recObj);
 
-handles.Fs16000 = Fs;
-
-% Update handles structure
-guidata(hObject, handles);
+    filename = 'tmp.wav';
+    audiowrite(filename, myRecording, FS)

@@ -10,6 +10,7 @@ ignore = init;
 disp ('分析各个单词的模板信息...');
 hmm = [];
 for k = 1 : theWs
+    break;
     disp (strcat ('开始分析单词', theWords (k)));
     tot = 0;
     samples = [];
@@ -21,8 +22,8 @@ for k = 1 : theWs
             %if (startp > endp) pause; end;
             disp (val);
             if (val == 0) continue; end;
-            %sound (y (startp:endp));
-            %pause;
+       %     sound (y (startp:endp));
+       %     pause;
             tot = tot + 1;
             samples(tot).x = y;
         end
@@ -32,7 +33,7 @@ for k = 1 : theWs
     hmm(k).x = hmmTrain (k, samples, 8000);
     disp ('训练完成...储存模板...')
 end
-save ('caomao.mat', 'hmm');
+%save ('rigou.mat', 'hmm');
 
 load ('caomao.mat');
 for i = (1:20)
