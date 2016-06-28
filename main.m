@@ -11,6 +11,7 @@ disp ('分析各个单词的模板信息...');
 for k = 1 : theWs
     disp (strcat ('开始分析单词', theWords (k)));
     tot = 0;
+    samples = [];
     for i = 1 : theNs
         for j = 1 : theMs
             %add ignore here
@@ -19,7 +20,7 @@ for k = 1 : theWs
             sound (y (startp : endp));
             %pause ;
             tot = tot + 1;
-            samples (tot).x = y;
+            samples(tot).x = y;
         end
     end
     disp (strcat ( strcat ( strcat (strcat ('单词' ,theWords (k)), '样本提取完成，共采样'), int2str (tot)), '组'));
@@ -29,3 +30,5 @@ for k = 1 : theWs
 end
 
  
+
+

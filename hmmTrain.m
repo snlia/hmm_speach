@@ -9,6 +9,8 @@ disp ('开始训练样本');
 
 disp ('提取样本特征');
 
+data = [];
+
 for i = (1 : N)
     y = samples(i).x;
     [stp, edp, val] = vad (y, fs);
@@ -24,5 +26,21 @@ S = theStates (idex); %对应的马尔科夫模型状态数量
 hmm = initHmm (data, S);
 
 %开始训练样本
+lastp = realmin;
+esp = 0.000005;
 for i = (1 : 100)
+    hmm = BaumWelch (hmm, data);
+    nowp = 0;
+    for j = (1 : N)
+        nowp = nowp + data(j).val * viterbi (hmm, data (j).x);
+    end
+    if (log (nowp) - log (lastp) < esp) 
+        break;
+    end
+    lastp = nowp;
+end
 
+%saveHmm (hmm);
+
+global theWords;
+disp (strcat (strcat ('单词', char (theWords (idex))), '训练完成...'));

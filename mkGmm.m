@@ -3,14 +3,17 @@
 function gmm = mkGmm (samples, K)
 
 %用kmeans先求得初始模型
-[res vect] = kmeans (samples, K); 
+[res, vect] = kmeans (samples, K); 
 
 %对于kmeans分出每个类里面的向量，计算方差
 for i = (1 : K)
-    sigma(i, :) = std (samples (find (i == res) , :));
+    idx = i == res;
+    tmp = samples (idx, :);
+    sigma(i,:) = std (tmp);
 end
 
 %根据kmeans的结果，计算权重
+w = [];
 for i = (1 : K)
     w(i) = size (find (i == res), 1);
 end
