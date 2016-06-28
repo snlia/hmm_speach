@@ -15,14 +15,9 @@ for k = 1 : theWs
     samples = [];
     for i = 1 : theNs
         for j = 1 : theMs
-            %add ignore here
             [y, fs] = readwav (char (theNames (i)), char (theWords (k)), int2str (j));
-            [startp, endp] = vad (y,fs);
-          %  disp (startp);
-          %  disp (endp);
-          %  disp (size (y));
-          %  sound (y (startp : endp));
-            %pause ;
+            if (fs == 0) continue; end
+            %[startp, endp] = vad (y,fs);
             tot = tot + 1;
             samples(tot).x = y;
         end
