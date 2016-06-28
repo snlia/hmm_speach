@@ -17,7 +17,12 @@ for k = 1 : theWs
         for j = 1 : theMs
             [y, fs] = readwav (char (theNames (i)), char (theWords (k)), int2str (j));
             if (fs == 0) continue; end
-            %[startp, endp] = vad (y,fs);
+            [startp, endp, val] = vad (y,fs);
+            %if (startp > endp) pause; end;
+            disp (val);
+            if (val == 0) continue; end;
+            %sound (y (startp:endp));
+            %pause;
             tot = tot + 1;
             samples(tot).x = y;
         end
@@ -31,7 +36,7 @@ save ('caomao.mat', 'hmm');
 
 load ('caomao.mat');
 for i = (1:20)
-    [y, fs] = readwav ('14307130166', 'Voice', int2str (i));
+    [y, fs] = readwav ('14307130244', 'Sound', int2str (i));
     p = zeros (1, theWs);
     for i = (1 : theWs)
         p(i) = calcHmm (hmm (i).x, y, fs);

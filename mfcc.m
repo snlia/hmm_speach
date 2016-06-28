@@ -1,7 +1,7 @@
 %mfcc (Mel-frequency cepstrum)
 %输入一个时域采样信息y以及采样频率fs，返回mfcc得到的特征向量。
 
-function res = mfcc (y, fs)
+function ccc = mfcc (y, fs)
 
 %设定mfcc相关系数
 Ms = 16; %mel滤波器组数
@@ -13,7 +13,7 @@ frameInc = frameLen * 0.5; % 桢移，桢长一半
 
 %加窗并分桢
 yy = enframe_muti (y, Hamming (frameLen), frameLen, frameInc);
-
+res = [];
 %mfcc计算
 for i = (1:size (yy, 1))
     nowy = yy (i, : );
@@ -26,3 +26,11 @@ for i = (1:size (yy, 1))
     res (i, :) = nowy';
 end
 
+dtm = zeros (size (res));
+for i= (3 : size(res, 1) - 2)
+  dtm(i, :) = - 2 * res (i - 2, :) - res (i - 1, :) + res (i + 1, :) + 2 * res (i + 2, :);
+end
+dtm = dtm / 3;
+
+ccc = [res dtm];
+ccc = ccc (3 : size (res, 1) - 2, :);

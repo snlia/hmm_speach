@@ -9,7 +9,7 @@ y = y / max(abs(y));
 
 %设定参数
 
-framelen = 256;%fs * 0.02; % 桢长，20ms
+framelen = fs * 0.02; % 桢长，20ms
 frameinc = framelen * 0.5; % 桢移，桢长一半
 
 %幅度归一化到[-1,1]
@@ -23,7 +23,7 @@ y = y / max_y;
 theTmp = enframe_muti (y(1:end - 1), ones (1, framelen), framelen, frameinc);
 theTmpp = enframe_muti (y(2:end), ones (1, framelen), framelen, frameinc);
 theTmppp = abs (theTmp - theTmpp);
-theEsp = max (max (theTmppp(1)), max (theTmppp(length(theTmppp)))) * 1.2;
+theEsp = max (max (theTmppp(1, :)), max (theTmppp(size (theTmppp, 1), :))) * 0.66;
 szcr = sum ((theTmp.*theTmpp < 0) .* (theTmppp > theEsp), 2); %过零且两点值相差大于theEsp
 
 %计算短时幅度 sm(short-term magnitude)
@@ -87,21 +87,105 @@ end;
 %plot (szcr);
 %axis([1,length(szcr),min(szcr),max(szcr)]);
 
-for startp = (startp:-1:1)
-    if (szcr(startp) <= theZ0)
-        break;
-    end;
-end;
+%for startp = (startp:-1:1)
+%    if (szcr(startp) <= theZ0)
+%        break;
+%    end;
+%end;
 
-for endp = (endp:theLen)
+tmpedp = endp;
+len = length (szcr);
+
+for endp = (endp: len)
     if (szcr(endp) <= theZ0)
         break;
     end;
 end;
 
+%计算声音质量
+
+%直接取到末尾，说明音质太差，排除
+if (endp == len) 
+    value = 0;
+    return;
+end
+
+%计算连续过Z0数量
+f = zeros (1, len + 1);
+%计算连续过Z0能量
+fm = zeros (1, len + 1);
+%计算连续过Z0均量
+fa = zeros (1, len + 1);
+tmpedp2 = endp;
+endp = endp + 1;
+nowx = endp;
+while (endp <= len)
+    if (szcr (endp) > theZ0) 
+        f (nowx) = f(nowx) + 1;
+        fm (nowx) = fm(nowx) + szcr (endp) - theZ0;
+        fa (nowx) = fm (nowx) / f (nowx);
+    else
+        nowx = endp + 1;
+    end
+    endp = endp + 1;
+end
+
+idx = find (max (f) == f, 1);
+if ((idx - tmpedp2 > 0) && (idx - tmpedp2 < 5)) 
+    endp = idx + f(idx) - 1;
+else
+    endp = tmpedp2;
+end
+if (endp >= len) 
+    %第二波直接触底，说明音质很差
+    value = 1;
+else
+    %先看有多少时间是在theZ0上
+    if (sum (f (endp + 1 : len)) / (len - tmpedp2) > 0.8) value = 1; 
+    else
+        if (sum (f (endp + 1 : len)) / (len - tmpedp2) < 0.3) value = 5;
+        else
+            if (max (fa (endp + 1 : len)) > 2.5 * theZ0) value = 1;
+            else
+                value = 5 - 4 * max (fa (endp + 1 : len)) / (2.5 * theZ0); %0是5分，3.5theZ0是1分
+            end
+        end
+    end
+end
+
+endp = tmpedp;
+for endp = (endp: min (len, endp + 10 * value))
+    if (szcr(endp) <= theZ0)
+        break;
+    end;
+end;
+
+if (value > 1.5) 
+    %计算连续过Z0数量
+    f = zeros (1, len + 1);
+    tmpedp2 = endp;
+    endp = endp + 1;
+    nowx = endp;
+    while (endp <= len)
+        if (szcr (endp) > theZ0) 
+            f (nowx) = f(nowx) + 1;
+        else
+            nowx = endp + 1;
+        end
+        endp = endp + 1;
+    end
+
+    idx = find (max (f) == f, 1);
+    if ((idx - tmpedp2 > 0) && (idx - tmpedp2 < 5)) 
+        endp = idx + f(idx) - 1;
+    else
+        endp = tmpedp2;
+    end
+end
+
 %line([startp ,startp],[min(szcr),max(szcr)],'color','red');
 %line([endp,endp],[min(szcr),max(szcr)],'color','red');
+%line([1, length(szcr)],[theZ0,theZ0],'color','yellow');
 
 startp = (frameinc - 1) * startp;
-endp = (frameinc - 1) * endp;
-value = 1;
+endp = (frameinc - 1) * endp + framelen;

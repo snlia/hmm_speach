@@ -17,7 +17,8 @@ for i = (1 : N)
     if (val == 0) continue; 
     end;
     data (i).x = mfcc (y (stp : edp), fs); %第i组样本特征
-    data (i).val = val; %第i组样本权重
+    if (size (data (i).x, 1) == 0) disp (stp); disp (edp); pause; end
+    data (i).val = 1; %第i组样本权重
 end
 
 global theStates; %每个单词的状态数
@@ -30,7 +31,8 @@ lastp = realmin;
 esp = 0.000005;
 for i = (1 : 50)
     hmm = BaumWelch (hmm, data);
-%    dispHmm (hmm);
+    dispHmm (hmm);
+    disp (i);
     nowp = 0;
     for j = (1 : N)
         nowp = nowp + data(j).val * viterbi (hmm, data (j).x);

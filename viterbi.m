@@ -22,4 +22,4 @@ for i = (2 : T)
     end
 end
 
-p = (max (f (N, :)));
+p = (max (f (T, :)));
