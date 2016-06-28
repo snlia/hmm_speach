@@ -5,7 +5,7 @@ function ccc = mfcc (y, fs)
 
 %设定mfcc相关系数
 Ms = 16; %mel滤波器组数
-frameLen = 256;%fs * 0.02; %桢长，20ms
+frameLen = 128;%fs * 0.02; %桢长，20ms
 frameInc = frameLen * 0.5; % 桢移，桢长一半
 
 %生成mel滤波器组

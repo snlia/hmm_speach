@@ -34,9 +34,14 @@ for i = (1 : N)
         for k = (1 : T)
             tmp1 = gamma (k).x (:, i, j);
             tmp2 = gamma (k).x (:, i, :);
-            hmm.A (i, j) = hmm.A (i, j) + sum (tmp1(:)) / sum (tmp2(:)) * data (k).val; 
+            if (sum (tmp1(:)) > 0) 
+                hmm.A (i, j) = hmm.A (i, j) + sum (tmp1(:)) / sum (tmp2(:)) * data (k).val; 
+            end
         end
     end
+end
+for i = (1 : N)
+%    hmm.A (i, :) = hmm.A (i, :) / sum (hmm.A (i, :));
 end
 hmm.A = hmm.A / allValue;
 
@@ -50,13 +55,13 @@ for i = (1 : N)
         for k = (1 : T)
             for t = (1 : size (data(k).x, 1))
                 x = data (k).x (t, :);
-                newMu = newMu + x * (xi (k).x (t, i, j));
-                newSigma = newSigma + ((x - B(i).mu(j,:)).^2) * (xi (k).x (t, i, j));
+                newMu = newMu + x * (xi (k).x (t, i, j) * data (k).val);
+                newSigma = newSigma + ((x - B(i).mu(j,:)).^2) * (xi (k).x (t, i, j) * data (k).val);
                 tsum = tsum + xi (k).x (t, i, j);
             end
         end
-        newMu = newMu / tsum;
-        newSigma = newSigma / tsum;
+        if (tsum > 0) newMu = newMu / tsum; end;
+        if (tsum > 0) newSigma = newSigma / tsum; end;
         hmm.B(i).mu (j, :) = newMu;
         hmm.B(i).sigma (j, :) = newSigma;
 
@@ -64,11 +69,12 @@ for i = (1 : N)
         tsum = 0;
         for k = (1 : T)
             tmp = xi (k).x (:,i,j);
-            tp = tp + data (i).val * sum (tmp (:));
+            tp = tp + data (k).val * sum (tmp (:));
             tmp = xi (k).x (:,i,:);
-            tsum = tsum + data (i).val * sum (tmp (:));
+            tsum = tsum + data (k).val * sum (tmp (:));
         end
-        hmm.B(i).w(j) = tp / tsum;
+        if (tsum > 0) hmm.B(i).w(j) = tp / tsum; end;
+        hmm.B(i).w = hmm.B(i).w / sum (hmm.B(i).w);
     end
     hmm.B(i).K = B(i).K;
 end

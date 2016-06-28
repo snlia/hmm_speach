@@ -17,8 +17,12 @@ for i = (1 : N)
     if (val == 0) continue; 
     end;
     data (i).x = mfcc (y (stp : edp), fs); %第i组样本特征
-    if (size (data (i).x, 1) == 0) disp (stp); disp (edp); pause; end
-    data (i).val = 1; %第i组样本权重
+    if (length (data(i).x) == 0)
+        disp (stp);
+        disp (edp);
+        pause ();
+    end;
+    data (i).val = val; %第i组样本权重
 end
 
 global theStates; %每个单词的状态数
@@ -29,7 +33,8 @@ hmm = initHmm (data, S);
 %开始训练样本
 lastp = realmin;
 esp = 0.000005;
-for i = (1 : 50)
+for i = (1 : 20)
+    dispHmm (hmm);
     hmm = BaumWelch (hmm, data);
     dispHmm (hmm);
     disp (i);

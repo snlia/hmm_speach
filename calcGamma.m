@@ -86,7 +86,7 @@ for t = 1:T
 		end
 		tmp  = pab(l)/sum(pab);
 		for j = 1:B(l).K
-			gama(t,l,j) = tmp * prob(j)/sum(prob);
+            gama(t,l,j) = tmp * prob(j)/sum(prob);
 		end
 	end
 end

@@ -2,6 +2,8 @@
 %输入一个时域采样信息y与采样频率fs，返回发音部分的起点startp与终点endp，以及这个语音的权重。
 function [startp, endp, value] = vad (y, fs)
 
+if (fs == 0) pause; end;
+
 %将数值映射到[-1, 1], 方便参数设定
 
 y = double (y);
@@ -189,3 +191,4 @@ end
 
 startp = (frameinc - 1) * startp;
 endp = (frameinc - 1) * endp + framelen;
+value = 1;
