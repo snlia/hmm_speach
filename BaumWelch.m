@@ -50,9 +50,9 @@ for i = (1 : N)
         for k = (1 : T)
             for t = (1 : size (data(k).x, 1))
                 x = data (k).x (t, :);
-                newMu = newMu + x * (xi (k).x (t, i, j) * data (k).val);
-                newSigma = newSigma + ((x - B(i).mu(j,:)).^2) * (xi (k).x (t, i, j) * data (k).val);
-                tsum = tsum + xi (k).x (t, i, j) * data (k).val;
+                newMu = newMu + x * (xi (k).x (t, i, j));
+                newSigma = newSigma + ((x - B(i).mu(j,:)).^2) * (xi (k).x (t, i, j));
+                tsum = tsum + xi (k).x (t, i, j);
             end
         end
         newMu = newMu / tsum;

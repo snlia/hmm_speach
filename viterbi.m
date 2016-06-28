@@ -17,7 +17,7 @@ end
 for i = (2 : T)
     for j = (1 : N)
         for k = (1 : N)
-            f (i, j) = min (f (i, j), f(i - 1, k) + A (j, k) + log (calcGmm (B(j), sample (i, :))));
+            f (i, j) = max (f (i, j), f(i - 1, k) + A (j, k) + log (calcGmm (B(j), sample (i, :))));
         end
     end
 end

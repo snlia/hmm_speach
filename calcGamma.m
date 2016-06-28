@@ -69,11 +69,35 @@ for i = (1 : T - 1)
 end
 gamma = gamma / sum (alpha (T, :));
 
+%
+gama = zeros(T,N,3);
+for t = 1:T
+	pab = zeros(N,1);
+	for l = 1:N
+		pab(l) = alpha(t,l) * beta(t,l);
+	end
+	x = sample(t,:);
+	for l = 1:N
+		prob = zeros(B(l).K,1);
+		for j = 1:B(l).K
+			m = B(l).mu(j,:);
+			v = B(l).sigma (j,:);
+			prob(j) = B(l).w(j) * pdf(x, m, v);
+		end
+		tmp  = pab(l)/sum(pab);
+		for j = 1:B(l).K
+			gama(t,l,j) = tmp * prob(j)/sum(prob);
+		end
+	end
+end
+
+xi = gama;
+return 
 %计算xi
 for i = (1 : T)
     tsum = sum (alpha (i, :) .* beta (i, :));
     for j = (1 : N)
-        tp = alpha (i, j) * beta (i, j) / tsum;
+        tp = alpha (i, j) * beta (i, j) / tsum; %第i时刻在j状态的概率
         for k = (1 : hmm.B(j).K)
             xi (i, j, k) = tp * pdf (sample (i, :), B(j).mu(k, :), B(j).sigma(k, :));
         end

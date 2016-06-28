@@ -10,7 +10,6 @@ ignore = init;
 disp ('分析各个单词的模板信息...');
 hmm = [];
 for k = 1 : theWs
-%    break;
     disp (strcat ('开始分析单词', theWords (k)));
     tot = 0;
     samples = [];
@@ -36,8 +35,8 @@ end
 save ('caomao.mat', 'hmm');
 
 load ('caomao.mat');
-for i = (1:1)
-    [y, fs] = readwav ('14307130166', 'Close', int2str (i));
+for i = (1:20)
+    [y, fs] = readwav ('14307130166', 'Voice', int2str (i));
     p = zeros (1, theWs);
     for i = (1 : theWs)
         p(i) = calcHmm (hmm (i).x, y, fs);

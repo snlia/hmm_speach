@@ -28,9 +28,9 @@ hmm = initHmm (data, S);
 %开始训练样本
 lastp = realmin;
 esp = 0.000005;
-for i = (1 : 20)
+for i = (1 : 50)
     hmm = BaumWelch (hmm, data);
-    dispHmm (hmm);
+%    dispHmm (hmm);
     nowp = 0;
     for j = (1 : N)
         nowp = nowp + data(j).val * viterbi (hmm, data (j).x);
