@@ -92,15 +92,3 @@ for t = 1:T
 end
 
 xi = gama;
-return 
-%计算xi
-for i = (1 : T)
-    tsum = sum (alpha (i, :) .* beta (i, :));
-    for j = (1 : N)
-        tp = alpha (i, j) * beta (i, j) / tsum; %第i时刻在j状态的概率
-        for k = (1 : hmm.B(j).K)
-            xi (i, j, k) = tp * pdf (sample (i, :), B(j).mu(k, :), B(j).sigma(k, :));
-        end
-    end
-end
-

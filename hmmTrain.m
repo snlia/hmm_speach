@@ -14,14 +14,7 @@ data = [];
 for i = (1 : N)
     y = samples(i).x;
     [stp, edp, val] = vad (y, fs);
-    if (val == 0) continue; 
-    end;
     data (i).x = mfcc (y (stp : edp), fs); %第i组样本特征
-    if (length (data(i).x) == 0)
-        disp (stp);
-        disp (edp);
-        pause ();
-    end;
     data (i).val = val; %第i组样本权重
 end
 
@@ -31,21 +24,10 @@ S = theStates (idex); %对应的马尔科夫模型状态数量
 hmm = initHmm (data, S);
 
 %开始训练样本
-lastp = realmin;
-esp = 0.000005;
-for i = (1 : 20)
-    dispHmm (hmm);
+for i = (1 : 5)
     hmm = BaumWelch (hmm, data);
     dispHmm (hmm);
     disp (i);
-    nowp = 0;
-    for j = (1 : N)
-        nowp = nowp + data(j).val * viterbi (hmm, data (j).x);
-    end
-    if (((nowp - lastp) / nowp) < esp) 
-        break;
-    end
-    lastp = nowp;
 end
 
 %saveHmm (hmm);

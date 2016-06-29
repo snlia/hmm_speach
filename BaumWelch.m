@@ -19,13 +19,13 @@ for i = (1 : T)
 end
 
 %计算新的初始状态
-hmm.pi = zeros (1, N);
-for i = (1 : N)
-    for j = (1 : T)
-        hmm.pi (i) = hmm.pi (i) + data (j).val * (pi (i) * calcGmm (B(i), data(j).x (1, :)));
-    end
-end
-hmm.pi = hmm.pi / sum (hmm.pi);
+%hmm.pi = zeros (1, N);
+%for i = (1 : N)
+%    for j = (1 : T)
+%        hmm.pi (i) = hmm.pi (i) + data (j).val * (pi (i) * calcGmm (B(i), data(j).x (1, :)));
+%    end
+%end
+%hmm.pi = hmm.pi / sum (hmm.pi);
 
 %计算新的转移矩阵
 hmm.A  = zeros (N, N);
@@ -48,6 +48,7 @@ hmm.A = hmm.A / allValue;
 %更新混合高斯模型
 
 for i = (1 : N)
+    hmm.B(i).w = zeros (1, B(i).K);
     for j = (1 : B (i).K)
         newMu = zeros (1, size (data(1).x, 2));
         newSigma = zeros (1, size (data(1).x, 2));
@@ -73,8 +74,8 @@ for i = (1 : N)
             tmp = xi (k).x (:,i,:);
             tsum = tsum + data (k).val * sum (tmp (:));
         end
-        if (tsum > 0) hmm.B(i).w(j) = tp / tsum; end;
-        hmm.B(i).w = hmm.B(i).w / sum (hmm.B(i).w);
+        if (tp > 0) hmm.B(i).w(j) = tp / tsum; 
+            else hmm.B(i).w(j) = 0; end;
     end
     hmm.B(i).K = B(i).K;
 end

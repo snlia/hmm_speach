@@ -191,3 +191,4 @@ end
 
 startp = (frameinc - 1) * startp;
 endp = (frameinc - 1) * endp + framelen;
+value = 1;

@@ -10,7 +10,6 @@ ignore = init;
 disp ('分析各个单词的模板信息...');
 hmm = [];
 for k = 1 : theWs
-    break;
     disp (strcat ('开始分析单词', theWords (k)));
     tot = 0;
     samples = [];
@@ -19,7 +18,6 @@ for k = 1 : theWs
             [y, fs] = readwav (char (theNames (i)), char (theWords (k)), int2str (j));
             if (fs == 0) continue; end
             [startp, endp, val] = vad (y,fs);
-            %if (startp > endp) pause; end;
             disp (val);
             if (val == 0) continue; end;
        %     sound (y (startp:endp));
@@ -30,18 +28,22 @@ for k = 1 : theWs
     end
     disp (strcat ( strcat ( strcat (strcat ('单词' ,theWords (k)), '样本提取完成，共采样'), int2str (tot)), '组'));
     disp ('开始训练...');
-    hmm(k).x = hmmTrain (k, samples, 8000);
+    hmp = hmmTrain (k, samples, 8000);
+    save (strcat (strcat ('hmmtmp/', char (theWords(k))), '.mat'), 'hmp');
+    hmm(k).x = hmp;
+%    hmm(k).x = hmmTrain (k, samples, 8000);
     disp ('训练完成...储存模板...')
 end
-%save ('rigou.mat', 'hmm');
+return ;
+save ('caomao.mat', 'hmm');
 
-load ('caomao.mat');
+%load ('caomao.mat');
 for i = (1:20)
-    [y, fs] = readwav ('14307130166', 'Sound', int2str (i));
+    [y, fs] = readwav ('14307130244', 'Sound', int2str (i));
     p = zeros (1, theWs);
-    for i = (1 : theWs)
+    for j = (1 : theWs)
         %dispHmm (hmm(i).x); pause;
-        p(i) = calcHmm (hmm (i).x, y, fs);
+        p(j) = calcHmm (hmm (j).x, y, fs);
     end
     disp (p);
     disp (theWords (find (max (p) == p)));
