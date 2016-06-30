@@ -14,7 +14,7 @@ theMs = 20;
 
 global theWords; %单词集
 theWords = cell (1,theWs); 
-%theWords = {'背景'};
+%theWords = {'北京'};
 %theWords = {'Close', 'File', 'Happy', 'Lucky', 'Open', 'Sound', 'Speech', 'Start', 'Stop', 'Voice'};
 theWords = {'Close', 'File', 'Happy', 'Lucky', 'Open', 'Sound', 'Speech', 'Start', 'Stop', 'Voice', '数字', '语音', '信号', '分析', '识别', '北京', '背景', '上海', '商行', '复旦'};
 

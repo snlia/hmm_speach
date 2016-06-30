@@ -5,6 +5,7 @@ global theMs; % 采样数
 global theWords; %单词集
 global theNames; %学号集
 %导入模型集
+%start sound file 北京 背景 start stop
 record ();
 %数字  语音   信号   分析   识别  北京  背景   上海   商行   复旦
 %Speech  Voice  Sound  Happy  Lucky  File  Open  Close  Start  Stop

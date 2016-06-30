@@ -75,7 +75,8 @@ for i = (1 : N)
             tsum = tsum + data (k).val * sum (tmp (:));
         end
         if (tp > 0) hmm.B(i).w(j) = tp / tsum; 
-            else hmm.B(i).w(j) = 0; end;
+        else hmm.B(i).w(j) = 0; 
+        end;
     end
     hmm.B(i).K = B(i).K;
 end

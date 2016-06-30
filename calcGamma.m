@@ -31,6 +31,7 @@ tmp = ones (1, T);
 tmp (1) = 1 / sum (alpha (1, :));
 alpha (1, :) = alpha (1, :) * tmp (1);
 
+
 for i = (2 : T)
     for j = (1 : N)
         for k = (1 : N)
@@ -40,6 +41,7 @@ for i = (2 : T)
     tmp (i) = 1 / sum (alpha (i, :));
     alpha (i, :) = alpha (i, :) * tmp (i);
 end
+
 
 %求后向概率矩阵beta
 %同样为了保证精度不爆炸，需要引入一个变量，这里仍然用tmp，原因在报告中说明
@@ -84,11 +86,17 @@ for t = 1:T
 			v = B(l).sigma (j,:);
 			prob(j) = B(l).w(j) * pdf(x, m, v);
 		end
-		tmp  = pab(l)/sum(pab);
-		for j = 1:B(l).K
-            gama(t,l,j) = tmp * prob(j)/sum(prob);
-		end
-	end
+        if ((sum (pab) > 0) && (sum (prob) > 0))
+            tmp  = pab(l)/sum(pab);
+            for j = 1:B(l).K
+                gama(t,l,j) = tmp * prob(j)/sum(prob);
+            end
+        else
+            for j = 1:B(l).K
+                gama(t, l, j) = B(l).w(j);
+            end
+        end;
+    end
 end
 
 xi = gama;

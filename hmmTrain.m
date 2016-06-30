@@ -24,7 +24,7 @@ S = theStates (idex); %对应的马尔科夫模型状态数量
 hmm = initHmm (data, S);
 
 %开始训练样本
-for i = (1 : 5)
+for i = (1 : 10)
     hmm = BaumWelch (hmm, data);
     dispHmm (hmm);
     disp (i);

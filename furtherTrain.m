@@ -52,7 +52,8 @@ disp ('开始训练');
 global theStates; %每个单词的状态数
 S = theStates (idex); %对应的马尔科夫模型状态数量
 
-for i = (1:10)
+for i = (1:5)
+    dispHmm (hmm(idex).x);
     hmm(idex).x = BaumWelch (hmm(idex).x, data);
     dispHmm (hmm(idex).x);
     disp (i);
