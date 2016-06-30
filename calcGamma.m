@@ -71,8 +71,8 @@ for i = (1 : T - 1)
 end
 gamma = gamma / sum (alpha (T, :));
 
-%
-gama = zeros(T,N,3);
+%计算每个gmm模型的触发概率
+xi = zeros(T,N,3);
 for t = 1:T
 	pab = zeros(N,1);
 	for l = 1:N
@@ -89,14 +89,13 @@ for t = 1:T
         if ((sum (pab) > 0) && (sum (prob) > 0))
             tmp  = pab(l)/sum(pab);
             for j = 1:B(l).K
-                gama(t,l,j) = tmp * prob(j)/sum(prob);
+                xi(t,l,j) = tmp * prob(j)/sum(prob);
             end
         else
             for j = 1:B(l).K
-                gama(t, l, j) = B(l).w(j);
+                xi(t, l, j) = B(l).w(j);
             end
         end;
     end
 end
 
-xi = gama;
